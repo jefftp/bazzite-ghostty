@@ -5,7 +5,9 @@ set -euo pipefail
 
 cd /src
 
-zig build -p "${INSTALL_PREFIX}" \
+zig build \
+  --summary all \
+  --prefix "${INSTALL_PREFIX}" \
   -Doptimize=ReleaseFast \
   -fno-sys=gtk4-layer-shell
 
