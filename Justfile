@@ -97,10 +97,12 @@ remove-ghostty:
     "{{install_prefix}}/share/systemd/user/app-com.mitchellh.ghostty.service" \
     "{{install_prefix}}/share/dbus-1/services/com.mitchellh.ghostty.service" \
     "{{install_prefix}}/share/terminfo/x/xterm-ghostty"
+
   rm -rf "{{install_prefix}}/share/ghostty"
+
   find "{{install_prefix}}/share/icons/hicolor" \
-    -type f
-    -name 'com.mitchellh.ghostty.png'
+    -type f \
+    -name 'com.mitchellh.ghostty.png' \
     -delete
 
   busctl --user call \
