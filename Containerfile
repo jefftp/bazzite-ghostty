@@ -7,23 +7,10 @@ RUN dnf install -y \
   gtk4-layer-shell-devel \
   libadwaita-devel \
   gettext \
-  tar \
-  gzip \
-  xz \
-  curl \
   patchelf \
+  zig-0.15.2-3.fc44 \
+  zig-0.15.2-3.fc44 \
   && dnf clean all
-
-RUN curl -L \
-  "https://ziglang.org/download/${ZIG_VERSION}/zig-x86_64-linux-${ZIG_VERSION}.tar.xz" \
-  -o /tmp/zig.tar.xz \
-  && mkdir -p /opt/zig \
-  && tar -xJf /tmp/zig.tar.xz \
-      --strip-components=1 \
-      -C /opt/zig \
-  && rm /tmp/zig.tar.xz
-
-ENV PATH="/opt/zig:${PATH}"
 
 WORKDIR /build
 
