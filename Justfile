@@ -45,7 +45,7 @@ compile-ghostty:
     -v "{{dist}}:/dist:Z" \
     {{image}}
 
-# Install into ~/.local
+# Install Ghostty and supporting files
 install:
   @test -f "{{dist / 'bin/ghostty'}}" || \
     (echo "Ghostty binary missing. Run: just compile-ghostty" >&2; exit 1)
@@ -87,6 +87,28 @@ install:
     "{{install_prefix}}/share/icons/hicolor/"
 
   cp -r "{{dist}}/share/ghostty" "{{install_prefix}}/share/"
+
+# Remove Ghostty and supporting files
+remove-ghostty:
+  rm \
+    "{{install_prefix}}/share/applications/com.mitchellh.ghostty.desktop" \
+    "{{install_prefix}}/bin/ghostty" \
+    "{{install_prefix}}/lib/libgtk4-layer-shell.so" \
+    "{{install_prefix}}/share/systemd/user/app-com.mitchellh.ghostty.service" \
+    "{{install_prefix}}/share/dbus-1/services/com.mitchellh.ghostty.service" \
+    "{{install_prefix}}/share/terminfo/x/xterm-ghostty"
+  rm -rf "{{install_prefix}}/share/ghostty"
+  find "{{install_prefix}}/share/icons/hicolor" \
+    -type f
+    -name 'com.mitchellh.ghostty.png'
+    -delete
+
+  busctl --user call \
+    org.freedesktop.DBus \
+    /org/freedesktop/DBus \
+    org.freedesktop.DBus \
+    ReloadConfig
+  systemctl --user daemon-reload
 
 # Test Ghostty without installing it
 test-run:
