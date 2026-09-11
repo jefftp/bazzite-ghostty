@@ -2,6 +2,7 @@ ghostty_version := "1.3.1"
 zig_version := "0.15.2"
 
 root := justfile_directory()
+src := root / "src"
 dist := root / "dist"
 
 home := env("HOME")
@@ -17,6 +18,16 @@ _default:
 # Build the build image
 build:
   podman build -t {{image}} .
+
+# Download and extract Ghostty source
+download-ghostty:
+  rm -rf {{src}}
+  mkdir -p {{src}}
+  curl -L \
+    "https://release.files.ghostty.org/{{ghostty_version}}/ghostty-{{ghostty_version}}.tar.gz" \
+    -o ghostty.tar.gz
+  tar -xzf ghostty.tar.gz --strip-components=1 -C {{src}}
+  rm ghostty.tar.gz
 
 # Compile Ghostty and export the artifacts
 export:
