@@ -29,24 +29,27 @@ download-ghostty:
   tar -xzf ghostty.tar.gz --strip-components=1 -C {{src}}
   rm ghostty.tar.gz
 
-# Compile Ghostty and export the artifacts
-export:
-  podman image exists {{image}} || \
-    (echo "Container image {{image}} missing. Run: just build" && exit 1)
+# Compile Ghostty
+compile-ghostty:
+  @podman image exists {{image}} || \
+    (echo "Container image {{image}} missing. Run: just build" >&2; exit 1)
+
+  @test -f "{{src}}/build.zig" || \
+    (echo "Ghostty source missing. Run: just download-ghostty" >&2; exit 1)
 
   rm -rf {{dist}}
   mkdir -p {{dist}}
 
   podman run --rm \
-    -e GHOSTTY_VERSION={{ghostty_version}} \
     -e INSTALL_PREFIX={{install_prefix}} \
-    -v "{{dist}}:/out:Z" \
+    -v "{{src}}:/src:Z" \
+    -v "{{dist}}:/dist:Z" \
     {{image}}
 
 # Install into ~/.local
 install:
-  test -x "{{dist / 'bin/ghostty'}}" || \
-    (echo "Ghostty binary missing or not executable. Run: just export" && exit 1)
+  @test -x "{{dist / 'bin/ghostty'}}" || \
+    (echo "Ghostty binary missing or not executable. Run: just export" >&2; exit 1)
 
   rm -rf "{{install_prefix}}"
   mkdir -p "{{install_prefix}}"
