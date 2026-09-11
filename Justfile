@@ -6,8 +6,7 @@ src := root / "src"
 dist := root / "dist"
 
 home := env("HOME")
-local := home / ".local"
-install_prefix := local / "ghostty.app"
+install_prefix := home / ".local"
 
 image := "ghostty-builder:" + ghostty_version
 
@@ -48,36 +47,47 @@ compile-ghostty:
 
 # Install into ~/.local
 install:
-  @test -x "{{dist / 'bin/ghostty'}}" || \
-    (echo "Ghostty binary missing or not executable. Run: just export" >&2; exit 1)
+  @test -f "{{dist / 'bin/ghostty'}}" || \
+    (echo "Ghostty binary missing. Run: just compile-ghostty" >&2; exit 1)
 
-  rm -rf "{{install_prefix}}"
-  mkdir -p "{{install_prefix}}"
-  cp -a "{{dist}}/." "{{install_prefix}}/"
+  install -Dm755 -T \
+    "{{dist}}/bin/ghostty" \
+    "{{install_prefix}}/bin/ghostty"
 
-  mkdir -p {{local}}/bin
-  ln -sfn ../ghostty.app/bin/ghostty \
-    "{{local}}/bin/ghostty"
+  install -Dm755 -T \
+    "{{dist}}/lib/libgtk4-layer-shell.so" \
+    "{{install_prefix}}/lib/libgtk4-layer-shell.so"
 
-  mkdir -p {{local}}/share/applications
-  cp {{install_prefix}}/share/applications/com.mitchellh.ghostty.desktop \
-    {{local}}/share/applications/
+  install -Dm644 -T \
+    "{{dist}}/share/applications/com.mitchellh.ghostty.desktop" \
+    "{{install_prefix}}/share/applications/com.mitchellh.ghostty.desktop"
 
-  mkdir -p {{local}}/share/dbus-1/services
-  cp {{install_prefix}}/share/dbus-1/services/com.mitchellh.ghostty.service \
-    {{local}}/share/dbus-1/services/
+  install -Dm644 -T \
+    "{{dist}}/share/dbus-1/services/com.mitchellh.ghostty.service" \
+    "{{install_prefix}}/share/dbus-1/services/com.mitchellh.ghostty.service"
 
-  mkdir -p {{local}}/share/systemd/user
-  cp {{install_prefix}}/share/systemd/user/app-com.mitchellh.ghostty.service \
-    {{local}}/share/systemd/user/
+  install -Dm644 -T \
+    "{{dist}}/share/systemd/user/app-com.mitchellh.ghostty.service" \
+    "{{install_prefix}}/share/systemd/user/app-com.mitchellh.ghostty.service"
 
-  mkdir -p {{local}}/share/icons/hicolor/128x128/apps
-  cp {{install_prefix}}/share/icons/hicolor/128x128/apps/com.mitchellh.ghostty.png \
-    {{local}}/share/icons/hicolor/128x128/apps/
+  install -Dm644 -T \
+    "{{dist}}/share/terminfo/x/xterm-ghostty" \
+    "{{install_prefix}}/share/terminfo/x/xterm-ghostty"
 
-  mkdir -p {{local}}/share/icons/hicolor/256x256/apps
-  cp {{install_prefix}}/share/icons/hicolor/256x256/apps/com.mitchellh.ghostty.png \
-    {{local}}/share/icons/hicolor/256x256/apps/
+  mkdir -p "{{install_prefix}}/share/icons/hicolor"
+  cp -r \
+    "{{dist}}/share/icons/hicolor/." \
+    "{{install_prefix}}/share/icons/hicolor/"
+
+  mkdir -p "{{install_prefix}}/share/ghostty"
+  cp -r \
+    "{{dist}}/share/bash-completion" \
+    "{{dist}}/share/bat" \
+    "{{dist}}/share/fish" \
+    "{{dist}}/share/nvim" \
+    "{{dist}}/share/vim" \
+    "{{dist}}/share/zsh" \
+    "{{install_prefix}}/share/ghostty/"
 
 # Test Ghostty without installing it
 test-run:
