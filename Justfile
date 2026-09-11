@@ -8,23 +8,20 @@ home := env("HOME")
 local := home / ".local"
 install_prefix := local / "ghostty.app"
 
-image := "ghostty-builder"
+image := "ghostty-builder:" + ghostty_version
 
 # Show available recipes
 _default:
   @just --list
 
-# Build the builder image
-build-image:
-  podman build \
-    --build-arg ZIG_VERSION={{zig_version}} \
-    --tag {{image}} \
-    .
+# Build the build image
+build:
+  podman build -t {{image}} .
 
 # Compile Ghostty and export the artifacts
 export:
   podman image exists {{image}} || \
-    (echo "Builder image missing. Run: just build-image" && exit 1)
+    (echo "Container image {{image}} missing. Run: just build" && exit 1)
 
   rm -rf {{dist}}
   mkdir -p {{dist}}
