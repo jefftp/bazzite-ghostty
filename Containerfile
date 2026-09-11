@@ -14,7 +14,7 @@ RUN dnf install -y \
 
 WORKDIR /build
 
-COPY --chmod=755 build-ghostty.sh /usr/local/bin/build-ghostty
+COPY --chmod=755 scripts/build-ghostty.sh /usr/local/bin/build-ghostty
 
 ENTRYPOINT ["/usr/local/bin/build-ghostty"]
 
