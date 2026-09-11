@@ -70,6 +70,13 @@ install:
     "{{dist}}/share/systemd/user/app-com.mitchellh.ghostty.service" \
     "{{install_prefix}}/share/systemd/user/app-com.mitchellh.ghostty.service"
 
+  systemctl --user daemon-reload
+  busctl --user call \
+    org.freedesktop.DBus \
+    /org/freedesktop/DBus \
+    org.freedesktop.DBus \
+    ReloadConfig
+
   install -Dm644 -T \
     "{{dist}}/share/terminfo/x/xterm-ghostty" \
     "{{install_prefix}}/share/terminfo/x/xterm-ghostty"
