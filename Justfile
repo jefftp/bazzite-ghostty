@@ -86,15 +86,7 @@ install:
     "{{dist}}/share/icons/hicolor/." \
     "{{install_prefix}}/share/icons/hicolor/"
 
-  mkdir -p "{{install_prefix}}/share/ghostty"
-  cp -r \
-    "{{dist}}/share/bash-completion" \
-    "{{dist}}/share/bat" \
-    "{{dist}}/share/fish" \
-    "{{dist}}/share/nvim" \
-    "{{dist}}/share/vim" \
-    "{{dist}}/share/zsh" \
-    "{{install_prefix}}/share/ghostty/"
+  cp -r "{{dist}}/share/ghostty" "{{install_prefix}}/share/"
 
 # Test Ghostty without installing it
 test-run:
