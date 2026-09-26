@@ -26,7 +26,9 @@ build-image:
 
 # Download and extract Ghostty source
 download:
-  rm -rf {{src}}
+  @test -d "{{src}}" || \
+    (echo "Source directory {{src}} already exists." >&2; exit 1)
+
   mkdir -p {{src}}
   curl -L \
     "https://release.files.ghostty.org/{{ghostty_version}}/ghostty-{{ghostty_version}}.tar.gz" \
@@ -122,9 +124,21 @@ uninstall:
 test:
   {{dist}}/bin/ghostty
 
-# Remove artifacts
-clean:
-  rm -rf {{dist}}
-  -podman image rm {{image}}
+# Remove source
+clean-source:
+  rm -rf {{src}}
 
+# Remove build and distribution artifacts
+clean-dist:
+  rm -rf {{src}}/.zig-cache
+  rm -rf {{dist}}
+
+# Remove the builder container image
+clean-image:
+  @if podman image exists {{image}}; then \
+    podman image rm {{image}}; \
+  fi
+
+# Remove all generated files and the builder image
+purge: clean-source clean-dist clean-image
 
