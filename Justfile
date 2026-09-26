@@ -79,10 +79,7 @@ compile: build-image download
   echo "Ghostty {{ghostty_version}} compiled successfully."
 
 # Install Ghostty and supporting files
-install:
-  @test -f "{{dist / 'bin/ghostty'}}" || \
-    (echo "Ghostty binary missing. Run: just compile-ghostty" >&2; exit 1)
-
+install: compile
   install -Dm755 -T \
     "{{dist}}/bin/ghostty" \
     "{{install_prefix}}/bin/ghostty"
