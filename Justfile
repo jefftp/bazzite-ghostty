@@ -60,6 +60,7 @@ compile: build-image download
 
   podman run --rm \
     -e INSTALL_PREFIX={{install_prefix}} \
+    -e VERSION_STRING={{ghostty_version}} \
     -v "{{src}}:/src:Z" \
     -v "{{dist}}:/dist:Z" \
     {{image}}
