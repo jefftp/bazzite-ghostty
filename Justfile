@@ -55,8 +55,19 @@ download:
 
 # Compile Ghostty
 compile: build-image download
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  if [[ -x "{{dist}}/bin/ghostty" ]] &&
+     [[ "$("{{dist}}/bin/ghostty" --version | head -n 1)" == "Ghostty {{ghostty_version}}" ]]; then
+    echo "Ghostty {{ghostty_version}} is already compiled."
+    exit 0
+  fi
+
   rm -rf {{dist}}
   mkdir -p {{dist}}
+
+  echo "Compiling Ghostty {{ghostty_version}}..."
 
   podman run --rm \
     -e INSTALL_PREFIX={{install_prefix}} \
@@ -64,6 +75,8 @@ compile: build-image download
     -v "{{src}}:/src:Z" \
     -v "{{dist}}:/dist:Z" \
     {{image}}
+
+  echo "Ghostty {{ghostty_version}} compiled successfully."
 
 # Install Ghostty and supporting files
 install:

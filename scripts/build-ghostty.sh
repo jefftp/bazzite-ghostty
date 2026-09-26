@@ -7,7 +7,7 @@ set -euo pipefail
 cd /src
 
 zig build \
-  --summary all \
+  --summary failures \
   --prefix "${INSTALL_PREFIX}" \
   -Doptimize=ReleaseFast \
   -Dversion-string="${VERSION_STRING}" \
