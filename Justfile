@@ -14,6 +14,12 @@ image := "ghostty-builder:" + ghostty_version
 _default:
   @just --list
 
+# Display version information
+version:
+  @echo "Ghostty Version: {{ghostty_version}}"
+  @echo "Zig Version:     {{zig_version}}"
+  @echo "Install Prefix:  {{install_prefix}}"
+
 # Build the container image
 build-image:
   podman build -t {{image}} .
