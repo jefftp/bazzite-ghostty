@@ -33,8 +33,17 @@ build-image:
 
 # Download and extract Ghostty source
 download:
-  @test ! -d "{{src}}" || \
-    (echo "Source directory {{src}} already exists." >&2; exit 1)
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  if [[ -f "{{src}}/VERSION" ]] && \
+     [[ "$(cat "{{src}}/VERSION")" == "{{ghostty_version}}" ]]; then
+    echo "Ghostty {{ghostty_version}} source already exists."
+    exit 0
+  elif [[ -e "{{src}}" ]]; then
+    echo "Existing source directory does not contain Ghostty {{ghostty_version}}." >&2
+    exit 1
+  fi
 
   curl --fail --location \
     "https://release.files.ghostty.org/{{ghostty_version}}/ghostty-{{ghostty_version}}.tar.gz" \
