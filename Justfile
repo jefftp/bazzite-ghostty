@@ -14,12 +14,12 @@ image := "ghostty-builder:" + ghostty_version
 _default:
   @just --list
 
-# Build the build image
-build:
+# Build the container image
+build-image:
   podman build -t {{image}} .
 
 # Download and extract Ghostty source
-download-ghostty:
+download:
   rm -rf {{src}}
   mkdir -p {{src}}
   curl -L \
@@ -29,7 +29,7 @@ download-ghostty:
   rm ghostty.tar.gz
 
 # Compile Ghostty
-compile-ghostty:
+compile:
   @podman image exists {{image}} || \
     (echo "Container image {{image}} missing. Run: just build" >&2; exit 1)
 
@@ -89,7 +89,7 @@ install:
   cp -r "{{dist}}/share/ghostty" "{{install_prefix}}/share/"
 
 # Remove Ghostty and supporting files
-remove-ghostty:
+uninstall:
   rm \
     "{{install_prefix}}/share/applications/com.mitchellh.ghostty.desktop" \
     "{{install_prefix}}/bin/ghostty" \
@@ -113,7 +113,7 @@ remove-ghostty:
   systemctl --user daemon-reload
 
 # Test Ghostty without installing it
-test-run:
+test:
   {{dist}}/bin/ghostty
 
 # Remove artifacts
