@@ -33,14 +33,15 @@ build-image:
 
 # Download and extract Ghostty source
 download:
-  @test -d "{{src}}" || \
+  @test ! -d "{{src}}" || \
     (echo "Source directory {{src}} already exists." >&2; exit 1)
 
-  mkdir -p {{src}}
-  curl -L \
+  curl --fail --location \
     "https://release.files.ghostty.org/{{ghostty_version}}/ghostty-{{ghostty_version}}.tar.gz" \
-    -o ghostty.tar.gz
-  tar -xzf ghostty.tar.gz --strip-components=1 -C {{src}}
+    --output ghostty.tar.gz
+
+  mkdir -p "{{src}}"
+  tar -xzf ghostty.tar.gz --strip-components=1 -C "{{src}}"
   rm ghostty.tar.gz
 
 # Compile Ghostty
