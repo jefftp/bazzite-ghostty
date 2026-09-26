@@ -22,7 +22,14 @@ version:
 
 # Build the container image
 build-image:
-  podman build -t {{image}} .
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  if podman image exists {{image}}; then
+    echo "Builder image '{{image}}' already exists."
+  else
+    podman build -t {{image}} .
+  fi
 
 # Download and extract Ghostty source
 download:
