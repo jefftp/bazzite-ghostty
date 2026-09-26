@@ -54,13 +54,7 @@ download:
   rm ghostty.tar.gz
 
 # Compile Ghostty
-compile:
-  @podman image exists {{image}} || \
-    (echo "Container image {{image}} missing. Run: just build" >&2; exit 1)
-
-  @test -f "{{src}}/build.zig" || \
-    (echo "Ghostty source missing. Run: just download-ghostty" >&2; exit 1)
-
+compile: build-image download
   rm -rf {{dist}}
   mkdir -p {{dist}}
 
