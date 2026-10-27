@@ -1,5 +1,5 @@
-ghostty_version := "1.3.1"
-zig_version := "0.15.2"
+ghostty_version := "1.4.0"
+zig_version := "0.17.0"
 
 root := justfile_directory()
 src := root / "src"
