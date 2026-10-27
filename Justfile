@@ -1,5 +1,4 @@
 ghostty_version := "1.4.0"
-zig_version := "0.17.0"
 
 root := justfile_directory()
 src := root / "src"
@@ -17,7 +16,6 @@ _default:
 # Display version information
 version:
   @echo "Ghostty Version: {{ghostty_version}}"
-  @echo "Zig Version:     {{zig_version}}"
   @echo "Install Prefix:  {{install_prefix}}"
 
 # Build the container image
