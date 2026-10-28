@@ -11,6 +11,7 @@ zig build \
   --prefix "${INSTALL_PREFIX}" \
   -Doptimize=ReleaseFast \
   -Dversion-string="${VERSION_STRING}" \
+  -Dinstalled-exe-path="${INSTALL_PREFIX}/bin/ghostty" \
   -fno-sys=gtk4-layer-shell
 
 patchelf \
